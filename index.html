@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SBTI 30题终极精神状态鉴定中心</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #121212; color: #e0e0e0; max-width: 700px; margin: 40px auto; padding: 20px; line-height: 1.6; }
+        .card { background: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border: 1px solid #2d2d2d; }
+        h2 { color: #ff4757; text-align: center; font-size: 24px; margin-bottom: 5px; }
+        .subtitle { text-align: center; color: #888; font-size: 14px; margin-bottom: 25px; }
+        .progress-bar { background: #2d2d2d; height: 6px; border-radius: 3px; margin-bottom: 25px; overflow: hidden; }
+        .progress-inner { background: #3742fa; height: 100%; width: 0%; transition: width 0.3s ease; }
+        .question-text { font-size: 18px; font-weight: bold; margin-bottom: 20px; color: #fff; }
+        .btn { display: block; width: 100%; background: #2d2d2d; color: #e0e0e0; border: 1px solid #444; padding: 14px; margin: 12px 0; border-radius: 8px; cursor: pointer; text-align: left; font-size: 15px; transition: all 0.2s ease; }
+        .btn:hover { background: #3742fa; color: white; border-color: #3742fa; transform: translateY(-1px); }
+        .start-btn { text-align: center; background: #ff4757; color: white; border: none; font-size: 18px; font-weight: bold; margin-top: 20px; }
+        .start-btn:hover { background: #ff6b81; }
+        #feedback-box { background: #252525; padding: 15px; border-left: 4px solid #ffa502; border-radius: 4px; margin-top: 20px; }
+        .fb-text { font-style: italic; color: #ffa502; font-weight: bold; }
+        .next-btn { background: #2ed573; color: white; border: none; text-align: center; font-weight: bold; margin-top: 15px; }
+        .next-btn:hover { background: #26af5f; }
+        .result-title { text-align: center; font-size: 28px; color: #ff4757; margin: 20px 0; font-weight: bold; }
+        .result-desc { font-size: 16px; text-align: justify; text-indent: 2em; background: #252525; padding: 20px; border-radius: 8px; border: 1px dashed #555; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>🎭 SBTI 精神状态鉴定中心</h2>
+        <div class="subtitle">（30题终极精神污染暴击版）</div>
+        <div class="progress-bar"><div class="progress-inner" id="progress"></div></div>
+        <div id="game-box">
+            <p style="font-size: 16px; text-align: center; margin: 30px 0;">30道纯粹由互联网发疯文学、技术牛马泪水筑成的性格测试。请准备好直面你那千疮百孔、千奇百怪的灵魂。</p>
+            <button class="btn start-btn" onclick="startQuiz()">准备好了，开始处刑 (0/30)</button>
+        </div>
+    </div>
+
+    <script>
+        let currentIdx = 0;
+        const scores = { FUCK: 0, DEAD: 0, CTRL: 0, FAKE: 0, MALO: 0, POOR: 0, SHIT: 0 };
+        
+        const questions = [
+            {
+                title: "1. 当你在思科模拟器（Cisco Packet Tracer）里配了半天IP和VLAN，结果两台PC死活ping不通还狂报超时，你的第一反应是：",
+                options: [
+                    { text: "A. 彻底暴走，狂敲键盘，对着屏幕输出一段含妈量极高的电报音", type: "FUCK", fb: "经典狂怒。键盘是无辜的，建议下次直接砸显示器。" },
+                    { text: "B. 陷入虚无，认为宇宙的本质就是不连通的，拔掉电源原地躺平", type: "DEAD", fb: "量子力学排错法？只要我不看，网络就处于通与不通的叠加态。" },
+                    { text: "C. 面如死灰地打开CLI和配置表，像个没有感情的排错机器从头查起", type: "CTRL", fb: "这浓浓的牛马味，看来已经被技术毒打得没有任何情绪波动了。" },
+                    { text: "D. 拍照发朋友圈：“今天也是被路由协议制裁的一天呢~”", type: "FAKE", fb: "都这时候了还不忘立人设，你朋友圈里到底有什么大人物？" }
+                ]
+            },
+            {
+                title: "2. 小组作业死线将至，你的代码还没跑通，而你的猪队友已经在旁边呼呼大睡还打起震天响的呼噜。此时你会：",
+                options: [
+                    { text: "A. 一脚踹醒他，大喊“老子不干了”，大家一起挂科", type: "MALO", fb: "同归于尽才是当代大学生的浪漫，敬你是条汉子！" },
+                    { text: "B. 默默戴上降噪耳机，一边心里问候他祖宗一边疯狂补救", type: "POOR", fb: "这都不发火？你活该被压榨，妥妥的无脑奉献型牛马。" },
+                    { text: "C. 把他的呼噜声录下来，混音成一首网易云阴乐在群里艾特他", type: "SHIT", fb: "老阴阳人了，这精神状态已经超越了人类的理解范畴。" },
+                    { text: "D. 帮他盖好被子，然后在最终的贡献度表格上把他的名字彻底划掉", type: "CTRL", fb: "表面笑嘻嘻，背后下死手，你这掌控欲和报复心真让人害怕。" }
+                ]
+            },
+            {
+                title: "3. 到了月底，你打开手机银行发现余额只剩下两位数。此时距离发生活费还有整整一个星期，你会：",
+                options: [
+                    { text: "A. 焦虑到狂掉头发，满网络搜兼职，甚至想去回收旧手机", type: "CTRL", fb: "别焦虑了，再怎么折腾，下个月月底你还是这个死出。" },
+                    { text: "B. 冷笑一声，买了一箱老坛酸菜面，决定用意志力对抗饥饿", type: "POOR", fb: "建议配合榨菜食用，不然你这清苦的生活显得没有层次感。" },
+                    { text: "C. 在各个群里发“v我50看看实力”，试图用赛博乞讨混口饭吃", type: "SHIT", fb: "你的自尊心和你的余额一样，看起来都不太多呢。" },
+                    { text: "D. 看看红尘，觉得钱乃身外之物，只要我不花钱穷就追不上我", type: "DEAD", fb: "阿弥陀佛，施主已经达到了物理和精神的双重辟谷境界。" }
+                ]
+            },
+            {
+                title: "4. 在网上冲浪时，遇到一个极其无脑的杠精在你的评论区大放厥词。你的反应是：",
+                options: [
+                    { text: "A. 引经据典，甩出三篇论文和十张截图，势必要在智商上碾压他", type: "FUCK", fb: "浪费生命去教育傻子，只能说明你今天真的闲得发慌。" },
+                    { text: "B. 回复一句“啊对对对，你说的都对，你最棒了呢”，直接阴阳回去", type: "SHIT", fb: "熟练运用‘对对对’文学，不愧是阴阳界的一把好手。" },
+                    { text: "C. 顺着他的无脑话说，拼命吹捧他，试图把他培养成更具毁灭性的傻子", type: "FAKE", fb: "高！实在是高！你这个人切开里面绝对全都是黑的。" },
+                    { text: "D. 内心毫无波澜，甚至有点想吃麻辣烫，反手就是一个拉黑", type: "DEAD", fb: "拉黑才是第一生产力，冷漠有效保护了你脆弱的乳腺。" }
+                ]
+            },
+            {
+                title: "5. 早上8点有必须要打卡的实训课，现在是7点52分，而你还在床上。你会：",
+                options: [
+                    { text: "A. 垂死病中惊坐起，衣服反穿、鞋踩扁，一路火花带闪电飞奔出门", type: "FUCK", fb: "在风中奔跑的狼狈样子，像极了一只被哈士奇撵的土拨鼠。" },
+                    { text: "B. 立刻掏出手机，编辑声泪俱下的假条：老师我急性胃肠炎在医院吊针", type: "FAKE", fb: "戏精学院毕业的吧？你的肠胃和阑尾为你背了太多的锅。" },
+                    { text: "C. 安详地翻个身继续睡。扣分罢了，还能要了我的命不成？", type: "MALO", fb: "只要胆子大，天天都是假。你的摆烂已经到了令人发指的地步。" },
+                    { text: "D. 30秒内规划出一条最快通勤路线，精确到秒执行，卡在7点59秒进教室", type: "CTRL", fb: "特种兵起床？就算快迟到了，也要维持该死的控制欲吗？" }
+                ]
+            },
+            // 补充 6 - 30 题，拉满题库
+            { title: "6. 当你在Linux系统里配置Yum源，运行完指令发现满屏都是红色的 Error 时，你会：", options: [
+                { text: "A. 直接运行 rm -rf /* ，大家一起毁灭", type: "FUCK", fb: "经典删库跑路，祝你的下半生在安全的地方度过。" },
+                { text: "B. 装作没看见，关掉终端，去打一把王者荣耀", type: "MALO", fb: "掩耳盗铃被你玩明白了，只要不看就等于没报错。" },
+                { text: "C. 复制报错信息，开启全球搜索引擎和AI排错模式", type: "CTRL", fb: "真是一具合格的代码缝合牛马工具人。" },
+                { text: "D. 叹口气，靠在椅子上，感觉身体和服务器一起宕机了", type: "DEAD", fb: "心率和服务器CPU使用率一样，都是一条直线了是吧？" }
+            ]},
+            { title: "7. 老师突然在班群里艾特全员说‘发一个抽查福利，收到请回复’，你的第一反应是：", options: [
+                { text: "A. 复制别人的‘收到’跟着发，多一个字都嫌累", type: "FAKE", fb: "跟风大师，缺乏灵魂的复读机。" },
+                { text: "B. 呵呵，‘福利’？怕不是又要抓谁去打扫实验室，装聋作哑绝不回复", type: "SHIT", fb: "看透了世态炎凉，浑身散发着刺骨的阴冷。" },
+                { text: "C. 秒回‘老师您辛苦了！祝老师顺心如意！’外加三个大拇指", type: "FAKE", fb: "这熟练的马屁技术，毕业了高低得是个部门主管。" },
+                { text: "D. 根本没看群，手机长期静音，世界与我无关", type: "DEAD", fb: "赛博失踪人口，失联得非常彻底。" }
+            ]},
+            { title: "8. 连续高强度赶了三天项目，照镜子时突然发现自己黑眼圈极深，且狂长了三颗大爆痘，你会：", options: [
+                { text: "A. 崩溃大叫，把桌上几百块的护肤品一股脑全抹脸上企图修护", type: "CTRL", fb: "护肤品也救不了你这随时要猝死的作息，清醒点！" },
+                { text: "B. 拿镜子仔细观察研究，阴阳怪气地自嘲‘不愧是当代赛博丧尸’", type: "SHIT", fb: "幽默，拿自己的长相开涮，你真是个狠人。" },
+                { text: "C. 认命地叹口气，拿帽子一戴，继续坐在电脑面前修Bug", type: "DEAD", fb: "无所谓，长不长痘的，反正也没人在乎你的死活。" },
+                { text: "D. 拍照发小红书：“记录一下为了梦想努力的自己，今天皮肤状态有点差。”", type: "FAKE", fb: "这就是传说中的‘精致穷’和‘赛博虚荣’吗？" }
+            ]},
+            { title: "9. 听说宿管阿姨明天要来突击检查宿舍卫生，而你们的寝室目前宛如垃圾场：", options: [
+                { text: "A. 把所有垃圾和脏衣服全部塞进衣柜和床底下，表面干净就行", type: "FAKE", fb: "应付检查的高手，金玉其外败絮其中的课代表。" },
+                { text: "B. 站在寝室中间指挥所有人：你扫地、你擦桌子、谁偷懒谁是狗", type: "CTRL", fb: "寝室长不让你当真的屈才了，这指挥若定的爹味真冲。" },
+                { text: "C. 随便阿姨怎么查，大不了扣分，反正我直接睡在垃圾堆里", type: "MALO", fb: "真正的勇士敢于直面宿管阿姨的咆哮和垃圾的味道。" },
+                { text: "D. 在宿舍门口贴个纸条：‘内有恶狗，请勿打扰’", type: "FUCK", fb: "狂！阿姨明天第一个没收你的热得快和电卡。" }
+            ]},
+            { title: "10. 去食堂排队买饭，一个厚脸皮的家伙极其自然地插到了你的前面，你会：", options: [
+                { text: "A. 拍拍他肩膀，面带微笑但声音极大地喊：‘同学，要饭去后面排队好吗？’", type: "SHIT", fb: "这输出，直接让插队侠社会性死亡，厉害。" },
+                { text: "B. 怒火中烧，直接扯住他后领子，大声质问他没长眼睛还是没上过学", type: "FUCK", fb: "铁血判官，食堂要是多几个你，秩序绝对好得多。" },
+                { text: "C. 算了，多一事不如少一事，反正也就是多等一分钟的事情", type: "DEAD", fb: "忍者神龟转世，别人踩你头上你都能夸他鞋底干净。" },
+                { text: "D. 偷偷拿出手机拍下他插队视频，准备发到学校表墙里曝光他", type: "CTRL", fb: "赛博纪检委，擅长在背后收集证据进行精准打击。" }
+            ]},
+            // 篇幅受限，以下快速填充11-30的核心映射数据
+            { title: "11. 突然收到前任发来的微信‘在吗，最近好吗？’你的第一反应是：", options: [
+                { text: "A. 借钱的？立刻删好友加拉黑一条龙", type: "POOR", fb: "穷让你的警惕性提高到了军工级别。" },
+                { text: "B. 截图给闺蜜/兄弟群，开始联合公开吐槽嘲笑", type: "SHIT", fb: "前任遇到你也是倒了血霉了，直接变成素材。" },
+                { text: "C. 陷入回忆，精心编辑一段文字展现自己过得很好，实际上在吃泡面", type: "FAKE", fb: "死要面子活受罪的典型代表。" },
+                { text: "D. 懒得回，死掉的人就应该好好呆在棺材里", type: "DEAD", fb: "冷酷无情，死得透透的。" }
+            ]},
+            { title: "12. 电脑突然蓝屏了，而且你过去两小时写的文档完全没有保存：", options: [
+                { text: "A. 怒砸鼠标，双手抱头发出土拨鼠般的尖叫", type: "FUCK", fb: "宣泄很到位，但文档还是没有了。" },
+                { text: "B. 盯着蓝屏笑出声，直接收拾东西下班/回寝室，天意让我摆烂", type: "MALO", fb: "老天爷都在配合你偷懒，这波不摆更待何时？" },
+                { text: "C. 血压飙升，立刻开始重启并满网络寻找临时缓存恢复教程", type: "CTRL", fb: "不到黄河心不死，掌控狂是不会轻易服输的。" },
+                { text: "D. 安详地闭上眼，觉得这大概就是自己福报到头的征兆", type: "DEAD", fb: "好一个顺从的打工魂，佛系得让人心疼。" }
+            ]},
+            { title: "13. 走在路上发现有人在发传单，并试图向你推销理发店办卡：", options: [
+                { text: "A. 摆摆手说‘没钱，快破产了’，步伐丝毫不减", type: "POOR", fb: "用最贫穷的真相击退最热情的推销。" },
+                { text: "B. 戴着耳机假装聋子，甚至开启眼神漂移目空一切", type: "DEAD", fb: "赛博防御机制拉满，走出了盲人的气势。" },
+                { text: "C. 接过传单，热情回应‘好的好的有空一定去’，转头塞进垃圾桶", type: "FAKE", fb: "无效社交大师，表面功夫做得滴水不漏。" },
+                { text: "D. 直接反向推销：‘办卡不要，但你听说过安利/思科网络配置吗？’", type: "SHIT", fb: "走骗子的路，让骗子无路可走。" }
+            ]},
+            { title: "14. 你的微信上有多少个从未置顶也常年免打扰的死群？", options: [
+                { text: "A. 几十个吧，基本全是进去领完优惠券就屏蔽的僵尸群", type: "POOR", fb: "赛博捡破烂大师就是你。" },
+                { text: "B. 数不清，大部分都忘了是干嘛的，懒得退也懒得看", type: "DEAD", fb: "群建在你的微信里，就像野草长在荒地里。" },
+                { text: "C. 分门别类整理得清清楚楚，偶尔进去发个拼多多助力", type: "CTRL", fb: "连死群都要分类，强迫症晚期没救了。" },
+                { text: "D. 经常在里面潜水偷表情包，看别人装逼并内心冷笑", type: "SHIT", fb: "窥视人间的赛博判官，专门收集人类愚蠢行为。" }
+            ]},
+            { title: "15. 手机电量掉到多少的时候，你会开始产生严重的焦虑感？", options: [
+                { text: "A. 90%。只要不满电我就觉得这个世界不安全", type: "CTRL", fb: "安全感全靠电池给，你的控制欲太极端了。" },
+                { text: "B. 20%。红格出现的时候才会四处找充电宝", type: "POOR", fb: "正常人的边缘，开始为了十几块钱的共享充电宝焦虑。" },
+                { text: "C. 1%。在自动关机前一秒甚至想跟手机赌一把命", type: "MALO", fb: "生死看淡，不服就关，玩的就是心跳。" },
+                { text: "D. 经常关机了才发现，反正也没人找我，无所谓", type: "DEAD", fb: "真正的山顶洞人，现代科技的局外人。" }
+            ]},
+            { title: "16. 网上买的东西到了，拆开发现跟买家秀差距极大，宛如拼多多拼偏了：", options: [
+                { text: "A. 拍桌大怒，立刻找客服激情对线，不给全额退款绝不罢休", type: "FUCK", fb: "客服今天踢到你这块铁板，算他倒霉。" },
+                { text: "B. 申请‘仅退款’，不退就天天找平台投诉，用规则玩死商家", type: "CTRL", fb: "熟练运用资本主义规则制裁资本家，高玩。" },
+                { text: "C. 懒得退换，好麻烦，直接扔在角落里接灰", type: "DEAD", fb: "宁愿亏钱也不愿多走两步路去菜鸟驿站，服了你。" },
+                { text: "D. 自认倒霉，默默给个五星好评但评语写：‘质量差得像屎，大家别买’", type: "SHIT", fb: "正版‘捧杀式’评价，商家看了都得流泪。" }
+            ]},
+            { title: "17. 被朋友拉去参加一个完全不认识的新人聚会，整场你都在：", options: [
+                { text: "A. 疯狂玩手机，把屏幕划得冒火星子，假装自己业务很忙", type: "DEAD", fb: "只要我划得够快，尴尬就追不上我。" },
+                { text: "B. 满场飞奔，加遍所有人微信，自称全场交际花", type: "FAKE", fb: "表面嗨上天，回家立刻虚脱得像条死狗。" },
+                { text: "C. 坐在角落疯狂吃果盘，势必要把AA的份子钱吃回来", type: "POOR", fb: "务实！把贫穷的智慧发挥到了高端局。" },
+                { text: "D. 冷眼旁观各路人马装逼，并在脑海里疯狂写吐槽小作文", type: "SHIT", fb: "你不是来聚会的，你是在采集人类迷惑行为大赏。" }
+            ]},
+            { title: "18. 学校/公司安排周末进行不计分的线上安全知识讲座，你会：", options: [
+                { text: "A. 开着刷课脚本或者倍速播放，自己去躺着睡觉", type: "MALO", fb: "上有政策下有对策，偷懒界的老江湖。" },
+                { text: "B. 认真听讲并做笔记，生怕错过了任何考核信息", type: "CTRL", fb: "听话得让人窒息，系统最喜欢的乖乖牛马。" },
+                { text: "C. 手机挂着视频，人已经出去逛街吃火锅了", type: "FAKE", fb: "形式主义完成得非常完美，两头不耽误。" },
+                { text: "D. 根本不点开，等催到头上再装作网络不好错过了", type: "DEAD", fb: "用最原始的叛逆对抗无聊的系统。" }
+            ]},
+            { title: "19. 外卖送到了，结果汤洒了一半，饭都泡软了，你会：", options: [
+                { text: "A. 怒点差评，怒写300字小作文大骂骑手和商家", type: "FUCK", fb: "键盘侠化身正义使者，火力全开。" },
+                { text: "B. 找客服申请赔付，算好洒了多少比例要求退多少钱", type: "CTRL", fb: "严谨！连洒出来的汤都能折算成微积分算账。" },
+                { text: "C. 挑没洒的地方随便吃两口，垃圾一扔继续躺着", type: "DEAD", fb: "生命体征维持器，吃饱就行，没有追求。" },
+                { text: "D. 朋友圈发图：‘今天的午餐很有流体力学的美感呢。’", type: "SHIT", fb: "阴阳怪气，不带脏字地恶心人。" }
+            ]},
+            { title: "20. 看到别人年纪轻轻就开豪车发大财，你内心的真实独白是：", options: [
+                { text: "A. 靠，家里有矿吧？要不就是走偏门，迟早要进去", type: "SHIT", fb: "纯度100%的柠檬精，酸得牙都要掉了。" },
+                { text: "B. 羡慕得流眼泪，回家转发锦鲤祈求自己明天暴富", type: "POOR", fb: "把命运寄托在封建迷信上的赛博穷鬼。" },
+                { text: "C. 关我屁事，他开他的法拉利，我吃我的老干妈", type: "DEAD", fb: "这坚固的防御，资本家看了都无从下手。" },
+                { text: "D. 疯狂研究对方是怎么发财的，制定一个不可能实现的暴富计划", type: "CTRL", fb: "野心很大，计划很长，然而执行力基本为零。" }
+            ]},
+            // 快速完成 21-30 题
+            { title: "21. 如果可以不用考虑现实，你最想从事什么职业？", options: [
+                { text: "A. 在大熊猫基地喂大熊猫，跟动物呆着", type: "DEAD", fb: "说白了你就是不想和人类这种生物产生联系。" },
+                { text: "B. 成为世界首富，每天的工作就是花钱", type: "POOR", fb: "最朴实的穷人梦想，庸俗但极其真诚。" },
+                { text: "C. 职业杠精，在网络上专门和各种大V对线", type: "FUCK", fb: "以摧毁他人乳腺为己任的法外狂徒。" },
+                { text: "D. 隐形大富豪，表面装作保安去体验生活", type: "FAKE", fb: "戏瘾真大，连做梦都要披着马甲。" }
+            ]},
+            { title: "22. 当有人跟你炫耀他刚买的昂贵护肤品时，你的表现是：", options: [
+                { text: "A. 哇！这个超好用的！你真有品味！（内心：什么垃圾玩意）", type: "FAKE", fb: "好一招塑料友谊的虚伪捧杀。" },
+                { text: "B. 查一下成分表，阴阳怪气科普这东西其实就是凡士林换个包装", type: "SHIT", fb: "话题终结者，专门剥开别人的虚荣心给人看。" },
+                { text: "C. 摸摸自己的大油脸，表示自己用大宝天天见也活得挺好", type: "DEAD", fb: "糙汉作风，皮肤和心态一样厚实。" },
+                { text: "D. 默默记下品牌，等发了工资自己也必须搞一套不能输", type: "CTRL", fb: "该死的胜负欲，钱包又要为你流泪了。" }
+            ]},
+            { title: "23. 参加期末考试/公司季度考核，遇到完全不会的题目，你会：", options: [
+                { text: "A. 把题目抄一遍，顺便在旁边画个哭泣的表情包试图博取同情", type: "SHIT", fb: "差生文具多，考试戏路宽。" },
+                { text: "B. 字迹工整地写满，哪怕全是胡编乱造的代码和公式也要填满", type: "CTRL", fb: "态度极其端正的瞎编大师，强迫症的最后坚持。" },
+                { text: "C. 盯了五分钟，选择放弃，直接趴在桌上开始睡觉", type: "MALO", fb: "考场睡眠质量检测员，主打一个重在参与。" },
+                { text: "D. 三长一短选最短，三短一长选最长，相信蒙题玄学", type: "DEAD", fb: "把命运交给概率论的佛系咸鱼。" }
+            ]},
+            { title: "24. 下班/放学后，你最常处于的状态是：", options: [
+                { text: "A. 躺在床上一动不动，像一具死去了三天的干尸", type: "DEAD", fb: "在充电和静音之间选择了彻底社会性死亡。" },
+                { text: "B. 疯狂刷短视频，一抬头发现已经凌晨两点，开始极度后悔", type: "MALO", fb: "多巴胺的奴隶，赛博时间的无情小偷。" },
+                { text: "C. 严格执行打卡、健身、学习计划，把自己逼得像个陀螺", type: "CTRL", fb: "你的人生是一张Excel表格吗？机器人都没你严苛。" },
+                { text: "D. 在各大游戏里跟路人激情对线，疯狂输出物理伤害", type: "FUCK", fb: "把白天的怨气全部撒在无辜路人身上的网络暴徒。" }
+            ]},
+            { title: "25. 走在路上突然下起了暴雨，而你没带伞，你会：", options: [
+                { text: "A. 狂奔起来，试图和雨滴赛跑，一边跑一边骂老天爷", type: "FUCK", fb: "狼狈的奔跑侠，老天爷听了想再给你加两道闪电。" },
+                { text: "B. 漫步在雨中，神情忧郁，感觉自己是网易云MV的主角", type: "FAKE", fb: "演，接着演，明天感冒流鼻涕的时候别哭。" },
+                { text: "C. 找个屋檐往下一蹲，开始心安理得地掏出手机玩游戏等雨停", type: "MALO", fb: "随遇而安的顶级摆烂王，哪里都是你的床。" },
+                { text: "D. 绝望地发现衣服是新买的，心疼衣服多过心疼自己的脑壳", type: "POOR", fb: "金钱的沉重枷锁，让你连淋雨都充满了成本核算。" }
+            ]},
+            { title: "26. 微信收到不熟的同学/同事发来的语音消息，长达59秒且一共发了5条：", options: [
+                { text: "A. 极其暴躁，直接转文字，转不出来就回一个‘说人话’", type: "FUCK", fb: "直截了当，专治各种语音巨婴。" },
+                { text: "B. 使用微信听筒模式放到最大音量，边听边翻白眼", type: "SHIT", fb: "折磨自己，顺便给对方在心里立了个牌位。" },
+                { text: "C. 假装没看见，放到过期失效也绝不点开", type: "DEAD", fb: "冷暴力天花板，用意志力抹消对方的存在。" },
+                { text: "D. 礼貌地听完，并且用同样长达60秒的毫无意义的废话语音回过去", type: "FAKE", fb: "以毒攻毒，用魔法打败魔法的虚伪大师。" }
+            ]},
+            { title: "27. 你对当下大火的各种人工智能（AI）和各种大模型的看法是：", options: [
+                { text: "A. 赶紧用它来帮我写作业、缝合代码，我好准时去打游戏", type: "MALO", fb: "人工智能最大的贡献就是解放了你这个懒鬼。" },
+                { text: "B. 完蛋了，AI 这么强，我这种天天配路由的牛马以后是不是要失业饿死", type: "POOR", fb: "还没毕业/被开除，就已经提前开始赛博焦虑了。" },
+                { text: "C. 严格研究它的提示词工程，试图用精密的框架彻底驯服AI", type: "CTRL", fb: "连人工智能都想当它爹，控制欲跨越了碳基和硅基。" },
+                { text: "D. 呵呵，不过是个高级的传话筒，还没我能阴阳怪气", type: "SHIT", fb: "在毒舌这一块，人工智能确实输给你的原生大脑了。" }
+            ]},
+            { title: "28. 走进一家装修极其高档、全是英文菜单的网红咖啡店，你的状态是：", options: [
+                { text: "A. 强装镇定，熟练地点一杯最便宜的美式，假装自己天天来", type: "FAKE", fb: "赛博中产伪装术，演得挺累的吧？" },
+                { text: "B. 看到价格的瞬间倒吸一口凉气，在心里把老板祖宗十八代骂了一遍", type: "POOR", fb: "这价格，直接刺穿了你本就贫瘠的赛博灵魂。" },
+                { text: "C. 拍张照发小红书：‘又是被美式唤醒灵魂的一天。’", type: "CTRL", fb: "朋友圈素材打卡机，生活全靠拍照维持。" },
+                { text: "D. 嫌弃位置太小、人太吵、咖啡像药，疯狂找茬", type: "SHIT", fb: "批判主义大师，全网最严厉的探店评委。" }
+            ]},
+            { title: "29. 学校或公司组织自愿报名的长跑比赛，你的反应是：", options: [
+                { text: "A. 报名！不仅报名还要买全套专业装备企图拿第一", type: "CTRL", fb: "差生文具多，胜负欲简直莫名其妙。" },
+                { text: "B. 自愿？那不就是不组织。只要不拿枪逼着我，我绝不挪窝", type: "MALO", fb: "将‘自愿’两个字执行得极其完美的自由灵魂。" },
+                { text: "C. 报名去当志愿者，专门负责发水，顺便看帅哥美女", type: "FAKE", fb: "社交工具人，哪里有热闹哪里就有你的面具。" },
+                { text: "D. 跑步？走两步我都嫌折寿，我选择在寝室为他们烧香祈福", type: "DEAD", fb: "安详，静态养生的终极代言人。" }
+            ]},
+            { title: "30. 终于做完了这整整 30 道变态的选择题，你现在的真实精神状态是：", options: [
+                { text: "A. 终于结束了，出题人是不是有什么大病？拿命来！", type: "FUCK", fb: "感谢你的陪伴，撑到最后说明你脾气其实还挺好。" },
+                { text: "B. 毫无感觉，我的灵魂早已麻木，这只是我无聊人生的30秒", type: "DEAD", fb: "纯度100%的行尸走肉，恭喜你成功通关。" },
+                { text: "C. 迫不及待想看结果，并且已经准备好截图去朋友圈吐槽了", type: "SHIT", fb: "快去吧，让你的朋友们也见识一下你的发疯指数。" },
+                { text: "D. 仔细检查前面有没有漏选或者点错的，试图推导计分公式", type: "CTRL", fb: "到最后一刻还在做架构分析，你才是最顶级的硬核怪人。" }
+            ]}
+        ];
+
+        function startQuiz() {
+            currentIdx = 0;
+            // 重置分数
+            for(let key in scores) scores[key] = 0;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = questions[currentIdx];
+            // 更新进度条
+            const progressPercent = ((currentIdx) / questions.length) * 100;
+            document.getElementById('progress').style.width = `${progressPercent}%`;
+
+            let html = `<div class="question-text">${q.title}</div>`;
+            q.options.forEach((opt, idx) => {
+                html += `<button class="btn" onclick="selectOption(${idx})">${opt.text}</button>`;
+            });
+            document.getElementById('game-box').innerHTML = html;
+        }
+
+        function selectOption(idx) {
+            const q = questions[currentIdx];
+            const opt = q.options[idx];
+            scores[opt.type]++;
+            
+            // 实时更新进度条
+            const progressPercent = ((currentIdx + 1) / questions.length) * 100;
+            document.getElementById('progress').style.width = `${progressPercent}%`;
+
+            let html = `<div class="question-text">${q.title}</div>`;
+            html += `<div style="color: #aaa; margin-bottom: 10px;">你的选择: ${opt.text.split('.')[0]}</div>`;
+            html += `<div id="feedback-box"><span class="fb-text">【考官点评】：</span><span style="color:#e0e0e0;">${opt.fb}</span></div>`;
+            
+            if (currentIdx < questions.length - 1) {
+                html += `<button class="btn next-btn" onclick="nextQuestion()">下一题 (${currentIdx + 2}/${questions.length}) ➡️</button>`;
+            } else {
+                html += `<button class="btn next-btn" style="background:#ff4757;" onclick="calculateResult()">⚡ 查看30题终极精神鉴定报告 ⚡</button>`;
+            }
+            document.getElementById('game-box').innerHTML = html;
+        }
+
+        function nextQuestion() {
+            currentIdx++;
+            showQuestion();
+        }
+
+        function calculateResult() {
+            document.getElementById('progress').style.width = '100%';
+            // 计算权重最高的人格
+            let maxType = 'DEAD';
+            let maxScore = -1;
+            for(let key in scores) {
+                if(scores[key] > maxScore) {
+                    maxScore = scores[key];
+                    maxType = key;
+                }
+            }
+
+            const resDb = {
+                DEAD: "【DEAD 职业倦怠型】你的精神状态可以用一具刚从古墓里挖出来的干尸来形容。经历了30道题的拷打，系统发现你已经成功把自己活成了一滩没有任何波澜的死水。每天最大的成就是坚持呼吸，只要能躺着绝不坐着，要是能入土为安你甚至愿意自己动手挖坑。你对生活没有任何世俗的欲望，什么升职加薪、全额奖学金，在你眼里都不如今天能多睡五分钟来得实在。你不是在生活，你只是在维持碳基生物的基本生命体征。",
+                MALO: "【MALO 摆烂猴王型】恭喜你，你就是传说中的“拒绝内卷第一人”，花果山最自由的摆烂猴王！在30个高压场景下，你无一例外地选择了退缩和摸鱼。你的座右铭是“只要我不努力，资本家就割不到我的韭菜”。你深谙摸鱼之道，能在最关键的时刻准时下班，能在最紧急的项目中稳如老狗。你不仅自己摆烂，还经常散发一种让人放弃抵抗的负能量力场，简直是当代职场和校园里的一股最强泥石流。",
+                FUCK: "【FUCK 暴躁狂野型】警告！检测到极度易燃易爆的危险灵魂！你就是一个行走的炸药包，精神状态常年在破防的边缘疯狂试探。无论是思科报错、外卖洒汤还是杠精挑衅，你都倾向于用最狂暴的输出去毁灭世界。你每天都在对着空气疯狂输出含妈量极高的电报音，用愤怒来掩饰你对这个荒诞世界的无奈。建议你随身携带速效救心丸，毕竟气坏了身子，最后吃亏的还是自己。",
+                SHIT: "【SHIT 阴阳怪气型】你是互联网当之无愧的顶级吐槽大师，阴阳怪气界的泰斗级人物。你看这个世界就没有一天是顺眼的，万物皆可成为你大做文章的素材。面对不公和愚蠢，你从不正面冲突，而是选择用最优雅的词汇、最刁钻的角度，把对方嘲讽得体无完肤。不管是学校表白墙还是公司微信群，你都能用一句话实现精准的冷嘲热讽。你内心住着一个极其冷漠且愤怒的赛博喷子。",
+                POOR: "【POOR 赛博贫困型】闻者伤心，见者落泪。在你的高频选择中，贫穷成为了挥之不去的底色。你不仅是物理意义上的钱包空空，更是精神层面的极度匮乏。你每天都在“好想暴富”和“算了穷死我吧”之间反复横跳。看到喜欢的东西，你的第一反应永远是看价格；遇到困难，你总是试图用最廉价、最消耗精力的方式解决。你的灵魂被贫穷深深地烙印，只剩下了精打细算的生存本能。",
+                FAKE: "【FAKE 社交伪装型】你是拥有两幅面孔的端水大师，社交界最顶级的伪装者。在人前，你是个八面玲珑、谁都不得罪的精致人儿，能和初次见面的人谈笑风生，能在朋友圈里岁月静好。但是一旦回到属于自己的狭小空间，你的电量就瞬间耗尽，变成一个连外卖电话都不想接的极度社恐。你用虚伪的热情来掩饰内心的冷漠，扮演着完美的角色，但其实你心里早就对全人类翻了无数个白眼。",
+                CTRL: "【CTRL 掌控狂人型】令人窒息！你是一个无可救药的掌控狂人，强迫症晚期患者。你的世界里容不下任何脱轨和失控，哪怕是配个VLAN网络，你都恨不得把每一个数据包的方向死死攥在手里。不管是写代码、做PPT还是安排日常，你都必须精确到每一个像素、每一行标点。如果事情没有按照你预设的剧本发展，你就会陷入极度的抓狂之中。你总觉得别人是白痴，只有自己亲力亲为才安心。"
+            };
+
+            let resultHtml = `<div class="result-title">鉴定完毕！</div>`;
+            resultHtml += `<p class="result-desc">${resDb[maxType]}</p>`;
+            resultHtml += `<button class="btn start-btn" onclick="location.reload()">不服气？重新受刑</button>`;
+            document.getElementById('game-box').innerHTML = resultHtml;
+        }
+    </script>
+</body>
+</html>
